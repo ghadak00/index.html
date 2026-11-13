@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ضرب دو عدد ۵ رقمی</title>
+<style>
+:root{--bg:#f6f5f2;--card:#fff;--text:#1d1d1b;--muted:#6b6b66;--accent:#1d5fd1;--border:#e2e0d9;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#171717;--card:#222;--text:#f1f0ec;--muted:#a3a29c;--accent:#6b9cf5;--border:#383836}}
+:root[data-theme="dark"]{--bg:#171717;--card:#222;--text:#f1f0ec;--muted:#a3a29c;--accent:#6b9cf5;--border:#383836}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:Tahoma,"Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;gap:20px;padding:24px 16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;width:100%;max-width:420px}
+h1{font-size:20px;margin:0 0 20px}
+.row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+.row span:last-child{font-weight:bold;direction:ltr;font-size:20px}
+.result{border:none;color:var(--accent)}
+.steps{padding:12px 0;border-bottom:1px solid var(--border)}
+.steps h2{font-size:15px;margin:0 0 8px;color:var(--muted)}
+.step{padding:8px 0;font-size:14px}
+.step .t{color:var(--muted);margin-bottom:2px}
+.step .m{direction:ltr;text-align:right;font-family:ui-monospace,Menlo,monospace}
+.step .s{direction:ltr;text-align:right;font-family:ui-monospace,Menlo,monospace;font-weight:bold}
+button{width:100%;margin-top:20px;padding:14px;font-size:16px;font-family:inherit;border:none;border-radius:12px;background:var(--accent);color:#fff;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>ضرب دو عدد ۵ رقمی تصادفی</h1>
+<div class="row"><span>عدد اول</span><span id="a">—</span></div>
+<div class="row"><span>عدد دوم</span><span id="b">—</span></div>
+<div class="steps"><h2>ضرب تک‌تک ارقام عدد دوم در عدد اول</h2><div id="steps"></div></div>
+<div class="row result"><span>حاصل ضرب نهایی</span><span id="r">—</span></div>
+<button id="go">تولید دو عدد جدید</button>
+</div>
+<div class="card">
+<h1>تقسیم عدد ۱۰ رقمی بر عدد ۲ رقمی</h1>
+<div class="row"><span>عدد اول (۱۰ رقمی)</span><span id="n1">—</span></div>
+<div class="row"><span>عدد دوم (۲ رقمی)</span><span id="n2">—</span></div>
+<div class="row result"><span>حاصل تقسیم (۴ رقم اعشار)</span><span id="q">—</span></div>
+<button id="go2">تولید دو عدد جدید</button>
+</div>
+<script>
+function rnd(){return Math.floor(Math.random()*(99999-11111+1))+11111}
+var places=['یکان','دهگان','صدگان','هزارگان','ده‌هزارگان'];
+function fmt(n){return n.toLocaleString('en-US')}
+function run(){
+  var a=rnd(),b=rnd();
+  document.getElementById('a').textContent=a;
+  document.getElementById('b').textContent=b;
+  var digits=String(b).split('').reverse().map(Number);
+  var html='',sum=0;
+  digits.forEach(function(d,i){
+    var p=a*d, shifted=p*Math.pow(10,i);
+    sum+=shifted;
+    html+='<div class="step"><div class="t">رقم '+places[i]+' ('+d+')</div>'+
+      '<div class="m">'+a+' × '+d+' = '+fmt(p)+(i>0?' → '+i+' صفر: ':'')+'</div>'+
+      '<div class="s">'+(i>0?fmt(shifted):'')+'</div></div>';
+  });
+  html+='<div class="step"><div class="t">جمع همهٔ حاصل‌ضرب‌ها</div><div class="m">'+
+    digits.map(function(d,i){return fmt(a*d*Math.pow(10,i))}).join(' + ')+'</div></div>';
+  document.getElementById('steps').innerHTML=html;
+  document.getElementById('r').textContent=fmt(sum);
+}
+document.getElementById('go').addEventListener('click',run);
+run();
+function rndBetween(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+function run2(){
+  var x=rndBetween(1000000000,9999999999),y=rndBetween(10,99);
+  document.getElementById('n1').textContent=x;
+  document.getElementById('n2').textContent=y;
+  document.getElementById('q').textContent=(x/y).toLocaleString('en-US',{minimumFractionDigits:4,maximumFractionDigits:4});
+}
+document.getElementById('go2').addEventListener('click',run2);
+run2();
+</script>
+</body>
+</html>
